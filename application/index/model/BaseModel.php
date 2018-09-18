@@ -17,7 +17,7 @@ class BaseModel
     protected $perPage;
 
     public function getById(int $id){
-        $result = Db::table($this->table)->where('id', $id)->get();
+        $result = Db::table($this->table)->where('id', $id)->find();
         return $result;
     }
 

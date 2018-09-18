@@ -10,6 +10,7 @@ namespace app\index\service;
 
 
 
+use app\index\service\impl\PostImplService;
 use app\index\ServiceKernel;
 
 class BaseService
@@ -22,7 +23,6 @@ class BaseService
      * @return mixed
      */
     public function getById(int $id){
-        return ['code' => '800'];
         return $this->model->getById($id);
     }
 
@@ -79,10 +79,10 @@ class BaseService
     }
 
     protected function getPostService(){
-        return ServiceKernel::create('Post');
+        return new PostImplService();
     }
 
-    protected function getPostModel(){
+    protected function getEmailModel(){
         return ServiceKernel::create('Email');
     }
 }

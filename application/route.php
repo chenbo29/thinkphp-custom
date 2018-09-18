@@ -10,8 +10,7 @@
 // +----------------------------------------------------------------------
 use think\Route;
 
-Route::rule('new/:id','index/Index/index','GET|POST');
-Route::resource('blog','index/Blog');
+Route::resource('post','index/Index');
 
 return [
     '__pattern__' => [

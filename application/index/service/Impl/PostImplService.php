@@ -10,6 +10,7 @@ namespace app\index\service\impl;
 
 
 
+use app\index\model\impl\PostImplModel;
 use app\index\service\BaseService;
 use app\index\service\PostService;
 use think\Log;
@@ -21,6 +22,6 @@ class PostImplService extends BaseService implements PostService
     public function __construct()
     {
         Log::info('post实例化');
-        $this->model = $this->getPostModel();
+        $this->model = new PostImplModel();
     }
 }
