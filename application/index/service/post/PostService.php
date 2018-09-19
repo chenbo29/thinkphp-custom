@@ -6,7 +6,7 @@
  * Time: 10:10
  */
 
-namespace app\index\service;
+namespace app\index\service\post;
 
 
 interface PostService

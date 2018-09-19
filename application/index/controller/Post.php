@@ -1,12 +1,12 @@
 <?php
 namespace app\index\controller;
 
+use app\index\BaseController;
 use app\index\service\impl\PostImplService;
 use app\index\responseCode;
-use think\Controller;
 use think\Request;
 
-class Index extends Controller
+class Post extends BaseController
 {
     public function index()
     {
@@ -26,6 +26,12 @@ class Index extends Controller
     public function save(){
         $title = Request::instance()->post('title','','htmlspecialchars');
         $content = Request::instance()->post('content','','htmlspecialchars');
+
+        $postModel = $this->getPostService()->getModel();
+        $postModel->title = "标题是$title";
+        $postModel->content = "正文内容是$content";
+        $postModel->save();
+
         if ($postId = $this->getPostService()->insert(['title' => $title, 'content' => $content])){
             return response(responseCode::statusSuccess, '保存成功', (int)$postId);
         } else {
@@ -74,7 +80,7 @@ class Index extends Controller
         if (!$this->getPostService()->checkExistsById($id)){
             return response(responseCode::statusSuccess, '不存在');
         }
-        if ($this->getPostService()->delete($id)){
+        if ($this->getPostService()->deleteById($id)){
             return response(responseCode::statusSuccess, '删除成功');
         } else {
             return response(responseCode::statusError, '删除失败');
@@ -82,6 +88,6 @@ class Index extends Controller
     }
 
     private function getPostService(){
-        return new PostImplService();
+        return $this->createService('post:PostService');
     }
 }

@@ -9,32 +9,33 @@
 namespace app\index;
 
 
-use app\index\service\Auth;
+use Pimple\Container;
 use think\Controller;
-use think\Log;
 use think\Request;
-use think\Response;
-use think\response\Json;
 
 class BaseController extends Controller
 {
-    protected $beforeActionList = [
-        'auth'
-    ];
+    protected $container;
+
     public function __construct(Request $request = null)
     {
         parent::__construct($request);
-        Log::record(print_r($request->header('Auth-Token'), true));
+        $this->container = new Container();
     }
 
-    protected function auth(){
-        $auth = new Auth($this->request);
-        $result = $auth->verify();
-        return ['code' => 401];
+    protected function createService($service){
+        if (!isset($this->container[$service])){
+            $serviceParams = explode(':', $service);
+            $serviceModule = $serviceParams[0];
+            preg_match("/(.*)Service$/", $serviceParams[1], $matches);
+            $serviceClass = "{$matches[1]}ImplService";
+            $stdClass = __NAMESPACE__ . "\\service\\$serviceModule\\impl\\$serviceClass";
+            $this->container[$service] = new $stdClass();
+        }
+        return $this->container[$service];
     }
 
-    public function _initialize()
-    {
-        return ['code' => 401];
+    protected function createModel($model){
+
     }
 }

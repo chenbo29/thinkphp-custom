@@ -16,10 +16,10 @@ use app\index\model\PostModel;
 class PostImplModel extends BaseModel implements PostModel
 {
     protected $table = 'posts';
-    protected $perPage = 5;
+    public $perPage = 5;
 
-    public function updateById(array $fields, int $id)
+    public function updateById(array $fields, $id)
     {
-        return $this->update($fields, array("id" => $id));
+        return $this->updateByWhere($fields, array("id" => $id));
     }
 }

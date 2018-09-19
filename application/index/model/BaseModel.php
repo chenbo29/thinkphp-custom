@@ -10,8 +10,9 @@ namespace app\index\model;
 
 
 use think\Db;
+use think\Model;
 
-class BaseModel
+class BaseModel extends Model
 {
     protected $table;
     protected $perPage;
@@ -21,16 +22,21 @@ class BaseModel
         return $result;
     }
 
-    public function listWithPaginate(){
-        $result = Db::table($this->table)->simplePaginate($this->perPage);
+    public function listWithPaginate($page, $perPage = null){
+        $result = Db::table($this->table)->page($page, $perPage)->select();
         return $result;
     }
 
     public function insert(array $fields){
+        $createAt = date('Y-m-d H:i:s', time());
+        $updateAt = date('Y-m-d H:i:s', time());
+        $fields = array_merge($fields, ['created_at' => $createAt, 'updated_at' => $updateAt]);
         return Db::table($this->table)->insertGetId($fields);
     }
 
-    public function update(array $fields, array $where){
+    public function updateByWhere(array $fields, array $where){
+        $updateAt = date('Y-m-d H:i:s', time());
+        $fields = array_merge($fields, ['updated_at' => $updateAt]);
         $table = Db::table($this->table);
         foreach ($where as $key => $value){
             $table->where($key, $value);
@@ -38,11 +44,11 @@ class BaseModel
         return $table->update($fields);
     }
 
-    public function delete(int $id){
-        return Db::table($this->table)->delete($id);
+    public function deleteById($id){
+        return $this->where('id', '=', $id)->delete();
     }
 
-    public function checkExistsById(int $id){
-        return Db::table($this->table)->where('id', $id)->exists();
+    public function checkExistsById($id){
+        return Db::table($this->table)->where('id', $id)->find() ? true : false;
     }
 }

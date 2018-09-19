@@ -10,3 +10,7 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
+
+function response($code, $message, $data = []){
+    return ['code' => $code, 'msg' => $message, 'data' => $data];
+}

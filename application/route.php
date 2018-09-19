@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 use think\Route;
 
-Route::resource('post','index/Index');
+Route::resource('post','index/Post');
 
 return [
     '__pattern__' => [
