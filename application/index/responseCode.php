@@ -18,4 +18,5 @@ class responseCode
 //    todo api接口的错误码的详细定义
     const statusSuccess = 200;
     const statusError = 500;
+    const statusNotFound = 404;
 }
