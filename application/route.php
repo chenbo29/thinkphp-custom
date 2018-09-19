@@ -10,7 +10,8 @@
 // +----------------------------------------------------------------------
 use think\Route;
 
-Route::resource('post','index/Post');
+Route::resource('post','index/Post', ['except'=>['create', 'edit']]);
+Route::resource('postsecond','second/Post', ['except'=>['create', 'edit']]);
 
 return [
     '__pattern__' => [

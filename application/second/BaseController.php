@@ -6,7 +6,7 @@
  * Time: 15:08
  */
 
-namespace app\index;
+namespace app\second;
 
 
 use Pimple\Container;
@@ -21,8 +21,6 @@ class BaseController extends Controller
     {
         parent::__construct($request);
         $this->container = new Container();
-        $authTokenService = $this->createService('auth:AuthTokenService');
-        $authTokenService->checkAuth();
     }
 
     protected function createService($service){
@@ -44,7 +42,7 @@ class BaseController extends Controller
         if (!isset($this->container[$model])){
             preg_match("/(.*)Model$/", $model, $matches);
             $serviceClass = "{$matches[1]}ImplModel";
-            $stdClass = "app\\index\\model\\impl\\$serviceClass";
+            $stdClass = "app\\second\\model\\impl\\$serviceClass";
             $this->container[$model] = function ($container) use($stdClass) {
                 return new $stdClass();
             };

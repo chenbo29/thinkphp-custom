@@ -6,7 +6,7 @@
  * Time: 10:25
  */
 
-namespace app\index\model;
+namespace app\second\model;
 
 
 use think\Db;
@@ -27,7 +27,7 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function insertWithFields(array $fields){
+    public function insert(array $fields){
         $createAt = date('Y-m-d H:i:s', time());
         $updateAt = date('Y-m-d H:i:s', time());
         $fields = array_merge($fields, ['created_at' => $createAt, 'updated_at' => $updateAt]);

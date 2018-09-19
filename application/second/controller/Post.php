@@ -1,16 +1,30 @@
 <?php
-namespace app\index\controller;
+namespace app\second\controller;
 
-use app\index\BaseController;
-use app\index\responseCode;
+use app\second\BaseController;
+use app\second\responseCode;
+use app\second\service\post\impl\CommentImplService;
+use app\second\service\post\impl\PostImplService;
 use think\Request;
 
 class Post extends BaseController
 {
+    protected $request;
+    protected $postService;
+    protected $commentService;
+
+    public function __construct(Request $request = null, PostImplService $postService = null, CommentImplService $commentService = null)
+    {
+        $this->request = $request;
+        $this->postService = $postService;
+        $this->commentService = $commentService;
+    }
+
     public function index()
     {
         $page = Request::instance()->get('page', 1);
-        $result = $this->getPostService()->listWithPaginate($page);
+        $result = $this->postService->listWithPaginate($page);
+        $this->commentService->test('测试两个service2');
         return response(responseCode::statusSuccess, '', $result);
     }
 
@@ -23,9 +37,9 @@ class Post extends BaseController
      * @return array
      */
     public function save(){
-        $title = Request::instance()->post('title','','htmlspecialchars');
-        $content = Request::instance()->post('content','','htmlspecialchars');
-        if ($postId = $this->getPostService()->insert(['title' => $title, 'content' => $content])){
+        $title = $this->request->post('title','','htmlspecialchars');
+        $content = $this->request->post('content','','htmlspecialchars');
+        if ($postId = $this->postService->insert(['title' => $title, 'content' => $content])){
             return response(responseCode::statusSuccess, '保存成功', (int)$postId);
         } else {
             return response(responseCode::statusError, '保存失败');
@@ -38,7 +52,7 @@ class Post extends BaseController
      * @return array
      */
     public function read($id){
-        if ($post = $this->getPostService()->getById($id)){
+        if ($post = $this->postService->getById($id)){
             return response(responseCode::statusSuccess, '', $post);
         } else {
             return response(responseCode::statusError, '不存在');
@@ -55,12 +69,12 @@ class Post extends BaseController
      * @return array
      */
     public function update($id){
-        if (!$this->getPostService()->getById($id)){
+        if (!$this->postService->getById($id)){
             return response(responseCode::statusError, '不存在该记录数据');
         }
         $title = Request::instance()->post('title','','htmlspecialchars');
         $content = Request::instance()->post('content','','htmlspecialchars');
-        if ($postId = $this->getPostService()->updateById(['title' => $title, 'content' => $content], $id)){
+        if ($postId = $this->postService->updateById(['title' => $title, 'content' => $content], $id)){
             return response(responseCode::statusSuccess, '编辑保存成功');
         } else {
             return response(responseCode::statusError, '编辑保存失败或无数据更新');
@@ -73,21 +87,13 @@ class Post extends BaseController
      * @return array|\think\Response
      */
     public function delete($id){
-        if (!$this->getPostService()->checkExistsById($id)){
+        if (!$this->postService->checkExistsById($id)){
             return response(responseCode::statusSuccess, '不存在');
         }
-        if ($this->getPostService()->deleteById($id)){
+        if ($this->postService->deleteById($id)){
             return response(responseCode::statusSuccess, '删除成功');
         } else {
             return response(responseCode::statusError, '删除失败');
         }
-    }
-
-    private function getPostService(){
-        return $this->createService('post:PostService');
-    }
-
-    private function getPostModel(){
-        return $this->createModel('PostModel');
     }
 }

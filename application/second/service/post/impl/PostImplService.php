@@ -6,15 +6,20 @@
  * Time: 10:13
  */
 
-namespace app\index\service\post\impl;
+namespace app\second\service\post\impl;
 
 
 
 use app\index\service\BaseService;
 use app\index\service\post\PostService;
+use think\Log;
 
 class PostImplService extends BaseService implements PostService
 {
+    public function __construct()
+    {
+        Log::info('post被实例化');
+    }
     /**
      * 通过id获取某条记录数据
      * @param int $id
@@ -43,7 +48,7 @@ class PostImplService extends BaseService implements PostService
      */
     public function insert(array $fields)
     {
-        return $this->getPostModel()->insertWithFields($fields);
+        return $this->getPostModel()->insert($fields);
     }
 
     /**
