@@ -41,7 +41,7 @@ class PostImplService extends BaseService implements PostService
      * @param array $fields
      * @return mixed
      */
-    public function insert(array $fields)
+    public function insert($fields)
     {
         return $this->getPostModel()->insertWithFields($fields);
     }
@@ -52,7 +52,7 @@ class PostImplService extends BaseService implements PostService
      * @param $id
      * @return mixed
      */
-    public function updateById(array $fields, $id)
+    public function updateById($fields, $id)
     {
         return $this->getPostModel()->updateById($fields, $id);
     }
