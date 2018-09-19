@@ -9,10 +9,10 @@
 namespace app\index\controller;
 
 
+use app\index\BaseController;
 use app\index\responseCode;
-use think\Controller;
 
-class Index extends Controller
+class Index extends BaseController
 {
     public function miss(){
         return response(responseCode::statusNotFound, '请求地址不存在');
