@@ -21,3 +21,9 @@
 * 部署command命令（test）：php think test，更新某条数据
 
 * post实体的read、list、save、update和delete的接口设计（PostMan） 
+
+
+### todo
+* 不同controller的auth验证
+* 注释
+* 版本

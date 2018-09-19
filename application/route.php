@@ -11,6 +11,8 @@
 use think\Route;
 
 Route::resource('post','index/Post', ['except'=>['create', 'edit']]);
+
+
 Route::resource('postsecond','second/Post', ['except'=>['create', 'edit']]);
 Route::miss('miss');
 return [];
