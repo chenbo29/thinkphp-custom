@@ -28,7 +28,7 @@ class TestCommand extends BaseCommand
 //        脚本处理逻辑
         $id = $input->getArgument('id');
         if ($this->getPostService()->checkExistsById($id)) {
-            $this->getPostService()->updateById(['title' => date('H:i:s', time()) . 'command处理'], 61);
+            $this->getPostService()->updateById(['title' => date('H:i:s', time()) . 'command处理'], $id);
             $result = $this->getPostService()->getById($id);
             $output->info("记录{$id}的脚本处理结果说明信息");
             $output->info(var_export($result));
