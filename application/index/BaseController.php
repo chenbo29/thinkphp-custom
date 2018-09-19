@@ -30,12 +30,23 @@ class BaseController extends Controller
             preg_match("/(.*)Service$/", $serviceParams[1], $matches);
             $serviceClass = "{$matches[1]}ImplService";
             $stdClass = __NAMESPACE__ . "\\service\\$serviceModule\\impl\\$serviceClass";
-            $this->container[$service] = new $stdClass();
+            $this->container[$service] = function ($container) use($stdClass) {
+                return new $stdClass($container);
+            };
         }
         return $this->container[$service];
     }
 
-    protected function createModel($model){
-
+    public function createModel($model){
+        // todo 同BaseService相同
+        if (!isset($this->container[$model])){
+            preg_match("/(.*)Model$/", $model, $matches);
+            $serviceClass = "{$matches[1]}ImplModel";
+            $stdClass = "app\\index\\model\\impl\\$serviceClass";
+            $this->container[$model] = function ($container) use($stdClass) {
+                return new $stdClass();
+            };
+        }
+        return $this->container[$model];
     }
 }
