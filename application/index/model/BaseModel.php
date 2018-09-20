@@ -22,7 +22,7 @@ class BaseModel extends Model
     protected $table;
     protected $perPage;
 
-    public function getById(int $id){
+    public function getById($id){
         $result = Db::table($this->table)->where('id', $id)->find();
         return $result;
     }
@@ -32,14 +32,14 @@ class BaseModel extends Model
         return $result;
     }
 
-    public function insertWithFields(array $fields){
+    public function insertWithFields($fields){
         $createAt = date('Y-m-d H:i:s', time());
         $updateAt = date('Y-m-d H:i:s', time());
         $fields = array_merge($fields, ['created_at' => $createAt, 'updated_at' => $updateAt]);
         return Db::table($this->table)->insertGetId($fields);
     }
 
-    public function updateByWhere(array $fields, array $where){
+    public function updateByWhere($fields, $where){
         $updateAt = date('Y-m-d H:i:s', time());
         $fields = array_merge($fields, ['updated_at' => $updateAt]);
         $table = Db::table($this->table);
