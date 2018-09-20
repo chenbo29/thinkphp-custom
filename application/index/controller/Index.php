@@ -25,4 +25,18 @@ class Index extends BaseController
     public function miss(){
         return response(responseCode::statusNotFound, '请求地址不存在');
     }
+
+    /**
+     * 登陆
+     * @return array|\think\Response
+     */
+    public function login(){
+        // todo 登陆密码的验证处理
+        list($accessKey, $secretKey) = $this->getAuthTokenService()->login();
+        return response(responseCode::statusSuccess, '', ['accessKey' => $accessKey, 'secretKey' => $secretKey]);
+    }
+
+    private function getAuthTokenService(){
+        return $this->createService('auth:AuthTokenService');
+    }
 }

@@ -18,10 +18,12 @@ use Pimple\Container;
 class BaseService
 {
     protected $container;
+    protected $redis;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
+        $this->redis = $container['redis'];
     }
 
     /**

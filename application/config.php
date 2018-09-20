@@ -241,7 +241,7 @@ return [
 
     'auth' => [
         'except' => [
-            'post'
+            'index'
         ],
     ]
 ];

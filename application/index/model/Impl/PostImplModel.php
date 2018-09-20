@@ -31,6 +31,8 @@ class PostImplModel extends BaseModel implements PostModel
      */
     public function updateById(array $fields, $id)
     {
-        return $this->updateByWhere($fields, array("id" => $id));
+        return $this->save($fields, function ($query) use($id) {
+            $query->where('id', '=', $id);
+        });
     }
 }

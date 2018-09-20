@@ -26,7 +26,8 @@
         "topthink/think-oracle": "1.*",
         "topthink/think-migration": "1.*",
         "ramsey/uuid": "^3.8",
-        "pimple/pimple": "^3.0"
+        "pimple/pimple": "^3.0",
+        "predis/predis": "^1.1"
     },
     "autoload": {
         "psr-4": {

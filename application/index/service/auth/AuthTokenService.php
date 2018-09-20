@@ -15,5 +15,9 @@ namespace app\index\service\auth;
  */
 interface AuthTokenService
 {
+    public function generateASKey();
+
     public function checkAuth();
+
+    public function login();
 }

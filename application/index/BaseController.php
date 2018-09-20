@@ -10,6 +10,7 @@ namespace app\index;
 
 
 use Pimple\Container;
+use Predis\Client;
 use think\Config;
 use think\Controller;
 use think\Request;
@@ -27,6 +28,7 @@ class BaseController extends Controller
     {
         parent::__construct($request);
         $this->container = new Container();
+        $this->container['redis'] = new Client('tcp://127.0.0.1:6379');
         // 判断请求是否需要安全验证
         if (!in_array(lcfirst(Request::instance()->controller()), Config::get('auth.except'))) {
             $authTokenService = $this->createService('auth:AuthTokenService');
