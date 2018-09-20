@@ -12,7 +12,7 @@
 
 * 加入服务容器化（pimple\container），解决依赖注入和单例化。（若不设计服务容器化，采用tp自身的依赖注入）。
 
-* API接口请求header头部新增Auth-Token处理非法请求。（80%，TODO: accessKey和secretKey）
+* API接口请求header头部新增Auth-Token处理非法请求。
 
 * API接口版本的设计使用 git tag 打标签的方式，线上部署各个版本代码。（TODO：web服务器的配置） 
 
