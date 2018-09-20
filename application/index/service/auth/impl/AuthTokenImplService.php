@@ -9,7 +9,7 @@
 namespace app\index\service\auth\impl;
 
 
-use app\index\responseCode;
+use app\index\ResponseCode;
 use app\index\service\auth\AuthTokenService;
 use app\index\service\BaseService;
 use Ramsey\Uuid\Uuid;
@@ -37,22 +37,22 @@ class AuthTokenImplService extends BaseService implements AuthTokenService
         $path = Request::instance()->path();
 
         if (!$redisData = $this->redis->get("auth:{$accessKey}")){
-            die(json_encode(['code' => responseCode::statusError, 'msg' => '不存在会话信息']));
+            die(json_encode(['code' => ResponseCode::statusError, 'msg' => '不存在会话信息']));
         }
 
         if(empty($authToken)){
-            die(json_encode(['code' => responseCode::statusError, 'msg' => '安全验证信息为空']));
+            die(json_encode(['code' => ResponseCode::statusError, 'msg' => '安全验证信息为空']));
         }
 
         if ($this->checkExpired($time)){
-            die(json_encode(['code' => responseCode::statusError, 'msg' => '过期'.time()]));
+            die(json_encode(['code' => ResponseCode::statusError, 'msg' => '过期'.time()]));
         }
 
         $redisData = json_decode($redisData, true);
         $secretKey = $redisData['secretKey'];
         $expectAuthToken = $this->generateAuthToken($path, $secretKey, $time, Request::instance()->post());
         if ($authToken != $expectAuthToken){
-            die(json_encode(['code' => responseCode::statusError, 'msg' => '请求非法'.$expectAuthToken]));
+            die(json_encode(['code' => ResponseCode::statusError, 'msg' => '请求非法'.$expectAuthToken]));
         }
 
         return true;

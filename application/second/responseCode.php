@@ -9,7 +9,7 @@
 namespace app\second;
 
 
-class responseCode
+class ResponseCode
 {
     const statusSuccess = 200;
     const statusError = 500;

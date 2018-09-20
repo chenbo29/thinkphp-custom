@@ -10,10 +10,10 @@ namespace app\index;
 
 /**
  * api接口的错误码的定义
- * Class responseCode
+ * Class ResponseCode
  * @package app\index
  */
-class responseCode
+class ResponseCode
 {
 //    todo api接口的错误码的详细定义
     const statusSuccess = 200;

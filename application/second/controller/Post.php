@@ -2,7 +2,7 @@
 namespace app\second\controller;
 
 use app\second\BaseController;
-use app\second\responseCode;
+use app\second\ResponseCode;
 use app\second\service\post\impl\CommentImplService;
 use app\second\service\post\impl\PostImplService;
 use think\Request;
@@ -25,7 +25,7 @@ class Post extends BaseController
         $page = Request::instance()->get('page', 1);
         $result = $this->postService->listWithPaginate($page);
         $this->commentService->test('测试两个service2');
-        return response(responseCode::statusSuccess, '', $result);
+        return response(ResponseCode::statusSuccess, '', $result);
     }
 
 //    public function create(){
@@ -40,9 +40,9 @@ class Post extends BaseController
         $title = $this->request->post('title','','htmlspecialchars');
         $content = $this->request->post('content','','htmlspecialchars');
         if ($postId = $this->postService->insert(['title' => $title, 'content' => $content])){
-            return response(responseCode::statusSuccess, '保存成功', (int)$postId);
+            return response(ResponseCode::statusSuccess, '保存成功', (int)$postId);
         } else {
-            return response(responseCode::statusError, '保存失败');
+            return response(ResponseCode::statusError, '保存失败');
         }
     }
 
@@ -53,9 +53,9 @@ class Post extends BaseController
      */
     public function read($id){
         if ($post = $this->postService->getById($id)){
-            return response(responseCode::statusSuccess, '', $post);
+            return response(ResponseCode::statusSuccess, '', $post);
         } else {
-            return response(responseCode::statusError, '不存在');
+            return response(ResponseCode::statusError, '不存在');
         }
     }
 
@@ -70,14 +70,14 @@ class Post extends BaseController
      */
     public function update($id){
         if (!$this->postService->getById($id)){
-            return response(responseCode::statusError, '不存在该记录数据');
+            return response(ResponseCode::statusError, '不存在该记录数据');
         }
         $title = Request::instance()->post('title','','htmlspecialchars');
         $content = Request::instance()->post('content','','htmlspecialchars');
         if ($postId = $this->postService->updateById(['title' => $title, 'content' => $content], $id)){
-            return response(responseCode::statusSuccess, '编辑保存成功');
+            return response(ResponseCode::statusSuccess, '编辑保存成功');
         } else {
-            return response(responseCode::statusError, '编辑保存失败或无数据更新');
+            return response(ResponseCode::statusError, '编辑保存失败或无数据更新');
         }
     }
 
@@ -88,12 +88,12 @@ class Post extends BaseController
      */
     public function delete($id){
         if (!$this->postService->checkExistsById($id)){
-            return response(responseCode::statusSuccess, '不存在');
+            return response(ResponseCode::statusSuccess, '不存在');
         }
         if ($this->postService->deleteById($id)){
-            return response(responseCode::statusSuccess, '删除成功');
+            return response(ResponseCode::statusSuccess, '删除成功');
         } else {
-            return response(responseCode::statusError, '删除失败');
+            return response(ResponseCode::statusError, '删除失败');
         }
     }
 }

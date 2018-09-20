@@ -10,7 +10,7 @@ namespace app\index\controller;
 
 
 use app\index\BaseController;
-use app\index\responseCode;
+use app\index\ResponseCode;
 
 /**
  * Class Index
@@ -23,7 +23,7 @@ class Index extends BaseController
      * @return array|\think\Response
      */
     public function miss(){
-        return response(responseCode::statusNotFound, '请求地址不存在');
+        return response(ResponseCode::statusNotFound, '请求地址不存在');
     }
 
     /**
@@ -33,7 +33,7 @@ class Index extends BaseController
     public function login(){
         // todo 登陆密码的验证处理
         list($accessKey, $secretKey) = $this->getAuthTokenService()->login();
-        return response(responseCode::statusSuccess, '', ['accessKey' => $accessKey, 'secretKey' => $secretKey]);
+        return response(ResponseCode::statusSuccess, '', ['accessKey' => $accessKey, 'secretKey' => $secretKey]);
     }
 
     private function getAuthTokenService(){
