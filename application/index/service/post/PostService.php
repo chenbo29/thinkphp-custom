@@ -8,7 +8,11 @@
 
 namespace app\index\service\post;
 
-
+/**
+ * 文章
+ * Interface PostService
+ * @package app\index\service\post
+ */
 interface PostService
 {
     public function getById($id);

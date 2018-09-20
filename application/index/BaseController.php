@@ -10,21 +10,35 @@ namespace app\index;
 
 
 use Pimple\Container;
+use think\Config;
 use think\Controller;
 use think\Request;
 
+/**
+ * 基础控制器类
+ * Class BaseController
+ * @package app\index
+ */
 class BaseController extends Controller
 {
-    protected $container;
+    protected $container; //服务容器
 
     public function __construct(Request $request = null)
     {
         parent::__construct($request);
         $this->container = new Container();
-        $authTokenService = $this->createService('auth:AuthTokenService');
-        $authTokenService->checkAuth();
+        // 判断请求是否需要安全验证
+        if (!in_array(lcfirst(Request::instance()->controller()), Config::get('auth.except'))) {
+            $authTokenService = $this->createService('auth:AuthTokenService');
+            $authTokenService->checkAuth();
+        }
     }
 
+    /**
+     * 获取某个service对象
+     * @param $service
+     * @return mixed
+     */
     protected function createService($service){
         if (!isset($this->container[$service])){
             $serviceParams = explode(':', $service);
@@ -37,18 +51,5 @@ class BaseController extends Controller
             };
         }
         return $this->container[$service];
-    }
-
-    public function createModel($model){
-        // todo 同BaseService相同
-        if (!isset($this->container[$model])){
-            preg_match("/(.*)Model$/", $model, $matches);
-            $serviceClass = "{$matches[1]}ImplModel";
-            $stdClass = "app\\index\\model\\impl\\$serviceClass";
-            $this->container[$model] = function ($container) use($stdClass) {
-                return new $stdClass();
-            };
-        }
-        return $this->container[$model];
     }
 }

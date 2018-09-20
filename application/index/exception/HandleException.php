@@ -13,6 +13,11 @@ use think\exception\HttpException;
 use think\exception\ValidateException;
 use think\Response;
 
+/**
+ * 自定义tp5的异常处理类
+ * Class HandleException
+ * @package app\index\exception
+ */
 class HandleException extends \think\exception\Handle
 {
     public function render(\Exception $e)

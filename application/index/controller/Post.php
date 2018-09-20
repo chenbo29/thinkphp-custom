@@ -5,18 +5,23 @@ use app\index\BaseController;
 use app\index\responseCode;
 use think\Request;
 
+/**
+ * 接口请求处理控制类（文章）
+ * Class Post
+ * @package app\index\controller
+ */
 class Post extends BaseController
 {
+    /**
+     * 分页列表数据
+     * @return array|\think\Response
+     */
     public function index()
     {
         $page = Request::instance()->get('page', 1);
         $result = $this->getPostService()->listWithPaginate($page);
         return response(responseCode::statusSuccess, '', $result);
     }
-
-//    public function create(){
-//
-//    }
 
     /**
      * 保存
@@ -44,10 +49,6 @@ class Post extends BaseController
             return response(responseCode::statusError, '不存在');
         }
     }
-
-//    public function edit(){
-//
-//    }
 
     /**
      * 编辑保存
@@ -83,11 +84,11 @@ class Post extends BaseController
         }
     }
 
+    /**
+     * 获取文章对象
+     * @return mixed
+     */
     private function getPostService(){
         return $this->createService('post:PostService');
-    }
-
-    private function getPostModel(){
-        return $this->createModel('PostModel');
     }
 }

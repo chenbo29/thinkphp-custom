@@ -238,4 +238,10 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
+
+    'auth' => [
+        'except' => [
+            'post'
+        ],
+    ]
 ];

@@ -8,7 +8,11 @@
 
 namespace app\index\service\post;
 
-
+/**
+ * 文章评论
+ * Interface CommentService
+ * @package app\index\service\post
+ */
 interface CommentService
 {
 

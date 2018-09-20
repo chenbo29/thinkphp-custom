@@ -13,6 +13,12 @@ namespace app\index\service\post\impl;
 use app\index\service\BaseService;
 use app\index\service\post\PostService;
 
+/**
+ * 文章类
+ * Class PostImplService
+ * @package app\index\service\post\impl
+ */
+
 class PostImplService extends BaseService implements PostService
 {
     /**

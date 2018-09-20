@@ -8,15 +8,27 @@
 
 namespace app\index\service;
 
+use Pimple\Container;
+
+/**
+ * 基础service类
+ * Class BaseService
+ * @package app\index\service
+ */
 class BaseService
 {
     protected $container;
 
-    public function __construct($container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * 获取模型对象（载入服务容器中）
+     * @param $model
+     * @return mixed
+     */
     public function createModel($model){
         if (!isset($this->container[$model])){
             preg_match("/(.*)Model$/", $model, $matches);

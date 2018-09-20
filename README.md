@@ -16,6 +16,8 @@
 
 * API接口版本的设计使用 git tag 打标签的方式，线上部署各个版本代码。（TODO：web服务器的配置） 
 
+* 配置tp5的config配置文件的auth->except参数，定义不需要接口安全验证的controller名称。
+
 ### tp5的功能测试部署 
 
 * 部署command命令（test）：php think test，更新某条数据
@@ -24,6 +26,5 @@
 
 
 ### todo
-* 不同controller的auth验证
 * 注释
 * 版本

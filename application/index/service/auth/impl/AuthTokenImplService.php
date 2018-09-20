@@ -14,8 +14,17 @@ use app\index\service\auth\AuthTokenService;
 use app\index\service\BaseService;
 use think\Request;
 
+/**
+ * 接口安全验证类
+ * Class AuthTokenImplService
+ * @package app\index\service\auth\impl
+ */
 class AuthTokenImplService extends BaseService implements AuthTokenService
 {
+    /**
+     * 接口安全验证
+     * @return bool
+     */
     public function checkAuth()
     {
 //        todo 验证auth-token的逻辑

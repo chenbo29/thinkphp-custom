@@ -13,6 +13,11 @@ use app\index\service\BaseService;
 use app\index\service\post\CommentService;
 use think\Log;
 
+/**
+ * 文章评论类
+ * Class CommentImplService
+ * @package app\index\service\post\impl
+ */
 class CommentImplService extends BaseService implements CommentService
 {
     public function __construct()

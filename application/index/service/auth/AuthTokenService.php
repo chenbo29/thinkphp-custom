@@ -8,7 +8,11 @@
 
 namespace app\index\service\auth;
 
-
+/**
+ * 接口安全验证
+ * Interface AuthTokenService
+ * @package app\index\service\auth
+ */
 interface AuthTokenService
 {
     public function checkAuth();

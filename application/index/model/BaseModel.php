@@ -12,6 +12,11 @@ namespace app\index\model;
 use think\Db;
 use think\Model;
 
+/**
+ * 基础模型类
+ * Class BaseModel
+ * @package app\index\model
+ */
 class BaseModel extends Model
 {
     protected $table;

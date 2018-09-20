@@ -12,6 +12,11 @@ namespace app\index\command;
 use Pimple\Container;
 use think\console\Command;
 
+/**
+ * 命令基础类
+ * Class BaseCommand
+ * @package app\index\command
+ */
 class BaseCommand extends Command
 {
     protected $container;
@@ -22,6 +27,11 @@ class BaseCommand extends Command
         $this->container = new Container();
     }
 
+    /**
+     * 获取service对象
+     * @param $service
+     * @return mixed
+     */
     protected function createService($service){
         if (!isset($this->container[$service])){
             $serviceParams = explode(':', $service);
@@ -36,8 +46,12 @@ class BaseCommand extends Command
         return $this->container[$service];
     }
 
+    /**
+     * 获取model对象
+     * @param $model
+     * @return mixed
+     */
     public function createModel($model){
-        // todo 同BaseService相同
         if (!isset($this->container[$model])){
             preg_match("/(.*)Model$/", $model, $matches);
             $serviceClass = "{$matches[1]}ImplModel";
