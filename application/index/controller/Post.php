@@ -59,8 +59,8 @@ class Post extends BaseController
         if (!$this->getPostService()->getById($id)){
             return response(responseCode::statusError, '不存在该记录数据');
         }
-        $title = Request::instance()->post('title','','htmlspecialchars');
-        $content = Request::instance()->post('content','','htmlspecialchars');
+        $title = Request::instance()->put('title','','htmlspecialchars');
+        $content = Request::instance()->put('content','','htmlspecialchars');
         if ($postId = $this->getPostService()->updateById(['title' => $title, 'content' => $content], $id)){
             return response(responseCode::statusSuccess, '编辑保存成功');
         } else {
