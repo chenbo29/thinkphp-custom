@@ -18,8 +18,12 @@
 
 * 配置tp5的config配置文件的auth->except参数，定义不需要接口安全验证的controller名称。
 
+* auth-token生成逻辑的定义和校验处理。
+
 ### tp5的功能测试部署 
 
 * 部署command命令（test）：php think test，更新某条数据
 
 * post实体的read、list、save、update和delete的接口
+
+* 登陆login接口
