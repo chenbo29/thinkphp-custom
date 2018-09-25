@@ -17,7 +17,15 @@ interface AuthTokenService
 {
     public function generateASKey();
 
-    public function checkAuth();
+    public function checkAuth($authToken, $accessKey, $time, $url);
 
-    public function login();
+    public function login($username, $password);
+
+    public function logout($accessKey);
+
+    public function register($username, $password);
+
+    public function getSessionKey($accessKey);
+
+    public function delaySession($accessKey, $seconds);
 }

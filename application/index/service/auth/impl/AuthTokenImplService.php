@@ -12,6 +12,7 @@ namespace app\index\service\auth\impl;
 use app\index\ResponseCode;
 use app\index\service\auth\AuthTokenService;
 use app\index\service\BaseService;
+use Predis\Client;
 use Ramsey\Uuid\Uuid;
 use think\Request;
 
@@ -23,36 +24,35 @@ use think\Request;
 class AuthTokenImplService extends BaseService implements AuthTokenService
 {
     private $expiredTime = 3600;
+
     /**
      * 接口安全验证
-     * @return bool
+     * @param $authToken 认证信息
+     * @param $accessKey
+     * @param $time 请求发起时间
+     * @param $url 请求路由信息
+     * @return bool|string
      */
-    public function checkAuth()
+    public function checkAuth($authToken, $accessKey, $time, $url)
     {
-        header('Content-Type: application/json');
-//        todo 验证auth-token的逻辑
-        $authToken = Request::instance()->header('Auth-Token');
-        $accessKey = Request::instance()->get('ak');
-        $time = Request::instance()->get('time', 0);
-        $path = Request::instance()->path();
-
-        if (!$redisData = $this->redis->get("auth:{$accessKey}")){
-            die(json_encode(['code' => ResponseCode::statusError, 'msg' => '不存在会话信息']));
+        if (!$this->redis->exists($this->getSessionKey($accessKey))){
+            return '不存在会话信息';
         }
 
         if(empty($authToken)){
-            die(json_encode(['code' => ResponseCode::statusError, 'msg' => '安全验证信息为空']));
+            return '安全验证信息为空';
         }
 
         if ($this->checkExpired($time)){
-            die(json_encode(['code' => ResponseCode::statusError, 'msg' => '过期'.time()]));
+            return '过期'.time();
         }
 
-        $redisData = json_decode($redisData, true);
+        $redisData = json_decode($this->redis->get($this->getSessionKey($accessKey)), true);
         $secretKey = $redisData['secretKey'];
-        $expectAuthToken = $this->generateAuthToken($path, $secretKey, $time, Request::instance()->post());
+        $params = array_merge(Request::instance()->post(), Request::instance()->put());
+        $expectAuthToken = $this->generateAuthToken($url, $secretKey, $time, $params);
         if ($authToken != $expectAuthToken){
-            die(json_encode(['code' => ResponseCode::statusError, 'msg' => '请求非法'.$expectAuthToken]));
+            return '请求非法'.$expectAuthToken;
         }
 
         return true;
@@ -77,13 +77,69 @@ class AuthTokenImplService extends BaseService implements AuthTokenService
      * @return array
      * @throws \Exception
      */
-    public function login(){
-        $username = Request::instance()->post('username');
-        $password = Request::instance()->post('password');
-//        todo
-        list($accessKey, $secretKey) = $this->generateASKey();
-        $this->redis->set("auth:{$accessKey}", json_encode(['username' => $username, 'secretKey' => $secretKey]));
-        return [$accessKey, $secretKey];
+    public function login($username, $password){
+        $user = $this->getUserModel()->where('username', $username)->where('password', $password)->find();
+        if ($user){
+            list($accessKey, $secretKey) = $this->generateASKey();
+            $this->redis->set($this->getSessionKey($accessKey), json_encode(['username' => $username, 'secretKey' => $secretKey]), 'EX', 3600);
+            return [$accessKey, $secretKey];
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 退出
+     * @param $accessKey
+     * @return bool
+     */
+    public function logout($accessKey)
+    {
+        if ($this->container['redis']->del($this->getSessionKey($accessKey))){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 注册
+     * @param $username
+     * @param $password
+     * @return bool
+     */
+    public function register($username, $password)
+    {
+        $user = $this->getUserModel()->where('username', $username)->find();
+        if ($user){
+            return false;
+        } else {
+            $this->getUserModel()->username = $username;
+            $this->getUserModel()->password = $password;
+            return $this->getUserModel()->save();
+        }
+    }
+
+    /**
+     * 会话缓存中存储的key
+     * @param $accessKey
+     * @return string
+     */
+    public function getSessionKey($accessKey)
+    {
+        return "auth:{$accessKey}";
+    }
+
+    /**
+     * 延期会话时间
+     * @param $accessKey
+     * @param $seconds
+     * @return int
+     */
+    public function delaySession($accessKey, $seconds)
+    {
+        $redis = new Client();
+        return $redis->expire($this->getSessionKey($accessKey), $seconds);
     }
 
     /**
@@ -111,5 +167,9 @@ class AuthTokenImplService extends BaseService implements AuthTokenService
      */
     private function checkExpired($time){
         return ($time + $this->expiredTime) < time();
+    }
+
+    private function getUserModel(){
+        return $this->createModel('UserModel');
     }
 }

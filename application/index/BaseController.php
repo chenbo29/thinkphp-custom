@@ -32,7 +32,17 @@ class BaseController extends Controller
         // 判断请求是否需要安全验证
         if (!in_array(lcfirst(Request::instance()->controller()), Config::get('auth.except'))) {
             $authTokenService = $this->createService('auth:AuthTokenService');
-            $authTokenService->checkAuth();
+            $authToken = Request::instance()->header('Auth-Token');
+            $accessKey = Request::instance()->get('ak');
+            $time = Request::instance()->get('time', 0);
+            $url = Request::instance()->url();
+            $result = $authTokenService->checkAuth($authToken, $accessKey, $time, $url);
+            if ($result !== true){
+                header('Content-Type: application/json');
+                die(json_encode(['code' => ResponseCode::statusError, 'msg' => $result]));
+            } else {
+                $authTokenService->delaySession($accessKey, 3600);
+            }
         }
     }
 

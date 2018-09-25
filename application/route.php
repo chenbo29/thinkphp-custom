@@ -10,8 +10,12 @@
 // +----------------------------------------------------------------------
 use think\Route;
 
+// 注册
+Route::post('register','index/Index/register');
 // 登陆
 Route::post('login','index/Index/login');
+// 推出登陆状态
+Route::get('logout','index/Session/logout');
 // 文章的资源管理路由
 Route::resource('post','index/Post', ['except'=>['create', 'edit']]);
 
