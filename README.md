@@ -20,10 +20,12 @@
 
 * auth-token生成逻辑的定义和校验处理。
 
+* 用户密码的验证逻辑
+
 ### tp5的功能测试部署 
 
 * 部署command命令（test）：php think test，更新某条数据
 
 * post实体的read、list、save、update和delete的接口
 
-* 登陆login接口
+* login、logout和register接口
