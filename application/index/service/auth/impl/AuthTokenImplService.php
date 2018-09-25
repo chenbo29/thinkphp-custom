@@ -23,8 +23,6 @@ use think\Request;
  */
 class AuthTokenImplService extends BaseService implements AuthTokenService
 {
-    private $expiredTime = 3600;
-
     /**
      * 接口安全验证
      * @param $authToken 认证信息
@@ -74,17 +72,23 @@ class AuthTokenImplService extends BaseService implements AuthTokenService
 
     /**
      * 登陆
-     * @return array
+     * @param $username
+     * @param $password
+     * @return array|bool
      * @throws \Exception
      */
     public function login($username, $password){
-        $user = $this->getUserModel()->where('username', $username)->where('password', $password)->find();
+        $user = $this->getUserModel()->where('username', $username)->find();
         if ($user){
-            list($accessKey, $secretKey) = $this->generateASKey();
-            $this->redis->set($this->getSessionKey($accessKey), json_encode(['username' => $username, 'secretKey' => $secretKey]), 'EX', Config::get('auth.session')['ttl']);
-            return [$accessKey, $secretKey];
+            if (password_verify($password, $user['password'])){
+                list($accessKey, $secretKey) = $this->generateASKey();
+                $this->redis->set($this->getSessionKey($accessKey), json_encode(['username' => $username, 'secretKey' => $secretKey]), 'EX', Config::get('auth.session')['ttl']);
+                return [$accessKey, $secretKey];
+            } else {
+                return '密码错误';
+            }
         } else {
-            return false;
+            return "{$username}用户不存在";
         }
     }
 
@@ -115,7 +119,7 @@ class AuthTokenImplService extends BaseService implements AuthTokenService
             return false;
         } else {
             $this->getUserModel()->username = $username;
-            $this->getUserModel()->password = $password;
+            $this->getUserModel()->password = password_hash($password, PASSWORD_BCRYPT);
             return $this->getUserModel()->save();
         }
     }
@@ -161,7 +165,7 @@ class AuthTokenImplService extends BaseService implements AuthTokenService
     }
 
     /**
-     * 有效期
+     * 是否失效
      * @param $time
      * @return bool
      */

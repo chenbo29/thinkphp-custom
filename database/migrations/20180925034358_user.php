@@ -32,7 +32,7 @@ class User extends Migrator
         $sql = "CREATE TABLE `user`(
     `id` INT NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(8) NOT NULL,
-    `password` VARCHAR(32) NOT NULL,
+    `password` VARCHAR(60) NOT NULL,
     PRIMARY KEY(`id`)
 )";
         $this->execute($sql);

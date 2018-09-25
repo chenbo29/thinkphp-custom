@@ -34,11 +34,12 @@ class Index extends BaseController
     public function login(){
         $username = Request::instance()->post('username');
         $password = Request::instance()->post('password');
-        if ($result = $this->getAuthTokenService()->login($username, $password)){
+        $result = $this->getAuthTokenService()->login($username, $password);
+        if (is_array($result)){
             list($accessKey, $secretKey) = $result;
             return response(ResponseCode::statusSuccess, '', ['accessKey' => $accessKey, 'secretKey' => $secretKey]);
         } else {
-            return response(ResponseCode::statusError, '登陆失败');
+            return response(ResponseCode::statusError, $result);
         }
     }
 
