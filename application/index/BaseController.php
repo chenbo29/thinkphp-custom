@@ -41,7 +41,7 @@ class BaseController extends Controller
                 header('Content-Type: application/json');
                 die(json_encode(['code' => ResponseCode::statusError, 'msg' => $result]));
             } else {
-                $authTokenService->delaySession($accessKey, 3600);
+                $authTokenService->expireSession($accessKey, Config::get('auth.session')['ttl']);
             }
         }
     }

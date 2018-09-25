@@ -27,5 +27,5 @@ interface AuthTokenService
 
     public function getSessionKey($accessKey);
 
-    public function delaySession($accessKey, $seconds);
+    public function expireSession($accessKey, $seconds);
 }

@@ -244,6 +244,9 @@ return [
         'except' => [
             'index'
         ],
+        'session' => [
+            'ttl' => 3600
+        ]
     ],
     // redis缓存配置
     'redis' => [

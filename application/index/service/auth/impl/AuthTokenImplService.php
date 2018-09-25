@@ -9,11 +9,11 @@
 namespace app\index\service\auth\impl;
 
 
-use app\index\ResponseCode;
 use app\index\service\auth\AuthTokenService;
 use app\index\service\BaseService;
 use Predis\Client;
 use Ramsey\Uuid\Uuid;
+use think\Config;
 use think\Request;
 
 /**
@@ -81,7 +81,7 @@ class AuthTokenImplService extends BaseService implements AuthTokenService
         $user = $this->getUserModel()->where('username', $username)->where('password', $password)->find();
         if ($user){
             list($accessKey, $secretKey) = $this->generateASKey();
-            $this->redis->set($this->getSessionKey($accessKey), json_encode(['username' => $username, 'secretKey' => $secretKey]), 'EX', 3600);
+            $this->redis->set($this->getSessionKey($accessKey), json_encode(['username' => $username, 'secretKey' => $secretKey]), 'EX', Config::get('auth.session')['ttl']);
             return [$accessKey, $secretKey];
         } else {
             return false;
@@ -136,7 +136,7 @@ class AuthTokenImplService extends BaseService implements AuthTokenService
      * @param $seconds
      * @return int
      */
-    public function delaySession($accessKey, $seconds)
+    public function expireSession($accessKey, $seconds)
     {
         $redis = new Client();
         return $redis->expire($this->getSessionKey($accessKey), $seconds);
