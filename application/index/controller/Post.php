@@ -56,7 +56,7 @@ class Post extends BaseController
      * @return array
      */
     public function update($id){
-        if (!$this->getPostService()->getById($id)){
+        if (!$this->getPostService()->checkExistsById($id)){
             return response(ResponseCode::statusError, '不存在该记录数据');
         }
         $title = Request::instance()->put('title','','htmlspecialchars');
@@ -75,7 +75,7 @@ class Post extends BaseController
      */
     public function delete($id){
         if (!$this->getPostService()->checkExistsById($id)){
-            return response(ResponseCode::statusSuccess, '不存在');
+            return response(ResponseCode::statusSuccess, '不存在该记录数据');
         }
         if ($this->getPostService()->deleteById($id)){
             return response(ResponseCode::statusSuccess, '删除成功');
