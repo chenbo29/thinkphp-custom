@@ -22,9 +22,9 @@ class Session extends BaseController
     public function logout(){
         $accessKey = Request::instance()->get('ak');
         if ($this->getAuthTokenService()->logout($accessKey)){
-            return response(ResponseCode::statusSuccess, '无法注销会话信息');
-        } else {
             return response(ResponseCode::statusSuccess, '会话信息已经注销');
+        } else {
+            return response(ResponseCode::statusSuccess, '无法注销会话信息');
         }
     }
 
