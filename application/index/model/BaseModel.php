@@ -55,9 +55,7 @@ class BaseModel extends Model
      * @return int|string
      */
     public function insertWithFields($fields){
-        $createAt = date('Y-m-d H:i:s', time());
-        $updateAt = date('Y-m-d H:i:s', time());
-        $fields = array_merge($fields, ['created_at' => $createAt, 'updated_at' => $updateAt]);
+        $fields = array_merge($fields, ['create_time' => time(), 'update_time' => time()]);
         return Db::table($this->table)->insertGetId($fields);
     }
 

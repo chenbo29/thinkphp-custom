@@ -14,4 +14,5 @@ use app\index\model\BaseModel;
 class UserImplModel extends BaseModel
 {
     protected $table = 'user';
+    protected $autoWriteTimestamp = true;
 }

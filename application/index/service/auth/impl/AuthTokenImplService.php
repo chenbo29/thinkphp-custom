@@ -23,6 +23,7 @@ use think\Request;
  */
 class AuthTokenImplService extends BaseService implements AuthTokenService
 {
+    protected $expiredTime = 3600;
     /**
      * 接口安全验证
      * @param $authToken 认证信息
@@ -49,7 +50,7 @@ class AuthTokenImplService extends BaseService implements AuthTokenService
         $secretKey = $redisData['secretKey'];
         $params = array_merge(Request::instance()->post(), Request::instance()->put());
         $expectAuthToken = $this->generateAuthToken($url, $secretKey, $time, $params);
-        if ($authToken != $expectAuthToken){
+        if ($authToken != $expectAuthToken && !Config::get('app_debug')){
             return '请求非法'.$expectAuthToken;
         }
 

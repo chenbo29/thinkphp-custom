@@ -3,7 +3,7 @@
 use think\migration\Migrator;
 use think\migration\db\Column;
 
-class User extends Migrator
+class Post extends Migrator
 {
     /**
      * Change Method.
@@ -26,23 +26,23 @@ class User extends Migrator
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
+
     public function up()
     {
-
-        $sql = "CREATE TABLE `user`(
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `username` VARCHAR(8) NOT NULL,
-    `password` VARCHAR(60) NOT NULL,
-    `create_time` int(10) not NULL,
-    `update_time` int(10) not NULL,
-    PRIMARY KEY(`id`)
+        $sql = "CREATE TABLE `posts` (
+ `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+ `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+ `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
+ `create_time` int(10) NOT NULL,
+ `update_time` int(10) NOT NULL,
+ PRIMARY KEY (`id`)
 )";
         $this->execute($sql);
     }
 
     public function down()
     {
-        $sql = "DROP TABLE `user`";
+        $sql = "DROP TABLE `posts`";
         $this->execute($sql);
     }
 }

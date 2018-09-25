@@ -37,7 +37,7 @@ class Index extends BaseController
         $result = $this->getAuthTokenService()->login($username, $password);
         if (is_array($result)){
             list($accessKey, $secretKey) = $result;
-            return response(ResponseCode::statusSuccess, '', ['accessKey' => $accessKey, 'secretKey' => $secretKey]);
+            return response(ResponseCode::statusSuccess, '登陆成功', ['accessKey' => $accessKey, 'secretKey' => $secretKey]);
         } else {
             return response(ResponseCode::statusError, $result);
         }
