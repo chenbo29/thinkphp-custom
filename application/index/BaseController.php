@@ -28,7 +28,7 @@ class BaseController extends Controller
     {
         parent::__construct($request);
         $this->container = new Container();
-        $this->container['redis'] = new Client('tcp://127.0.0.1:6379');
+        $this->container['redis'] = new Client(sprintf('tcp://%s:%s', Config::get('redis.host'), Config::get('redis.port')));
         // 判断请求是否需要安全验证
         if (!in_array(lcfirst(Request::instance()->controller()), Config::get('auth.except'))) {
             $authTokenService = $this->createService('auth:AuthTokenService');

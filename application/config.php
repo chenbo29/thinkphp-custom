@@ -239,9 +239,15 @@ return [
         'list_rows' => 15,
     ],
 
+    // 不需要auth接口认证的控制器
     'auth' => [
         'except' => [
             'index'
         ],
-    ]
+    ],
+    // redis缓存配置
+    'redis' => [
+        'host' => '127.0.0.1',
+        'port' => '6379'
+    ],
 ];
