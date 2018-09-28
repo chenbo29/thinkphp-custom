@@ -37,8 +37,8 @@ class Post extends BaseController
         $content = Request::instance()->post('content','','htmlspecialchars');
         // 业务数据
         $fields = [
-            'title' => $title,
-            'content' => $content
+            'title' => $title . date('Y-m-d H:i:s'),
+            'content' => $content . date('Y-m-d H:i:s')
         ];
         // 对业务的数据进行控制处理-验证字段值是否符合条件
         $PostValidateResult = validateCheck('PostValidate', $fields, 'save');

@@ -49,6 +49,9 @@ class PostImplService extends BaseService implements PostService
                     'content' => sprintf("%s{$fields['title']}%s", '这篇文章', '写的真不错')
                 ];
                 $this->getCommentService()->insert($commentFields);
+
+                // 其他：业务逻辑3等
+
             } catch (Exception $e){
                 // 捕获后日志记录，或其它处理
                 Log::error($e->getMessage());
