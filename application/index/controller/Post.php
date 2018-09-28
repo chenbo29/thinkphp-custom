@@ -25,13 +25,29 @@ class Post extends BaseController
 
     /**
      * 保存
+     * 控制层
+     * 获取参数
+     * 参数格式验证
+     *
      * @return array
      */
     public function save(){
+        // 对Request请求数据进行控制处理-默认值-过滤
         $title = Request::instance()->post('title','','htmlspecialchars');
         $content = Request::instance()->post('content','','htmlspecialchars');
-        if ($postId = $this->getPostService()->insert(['title' => $title, 'content' => $content])){
-            return response(ResponseCode::statusSuccess, '保存成功', (int)$postId);
+        // 业务数据
+        $fields = [
+            'title' => $title,
+            'content' => $content
+        ];
+        // 对业务的数据进行控制处理-验证字段值是否符合条件
+        $PostValidateResult = validateCheck('PostValidate', $fields, 'save');
+        if ($PostValidateResult !== true){
+            return response(ResponseCode::statusError, $PostValidateResult);
+        }
+        // 对业务处理结果进行控制处理-Response结果返回
+        if ($postId = $this->getPostService()->insert($fields)){
+            return response(ResponseCode::statusSuccess, '保存成功');
         } else {
             return response(ResponseCode::statusError, '保存失败');
         }
