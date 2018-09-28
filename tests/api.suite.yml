@@ -1,0 +1,15 @@
+actor: ApiTester
+modules:
+    enabled:
+        - \Helper\Api
+        - REST:
+              url: http://127.0.0.1:8080
+              depends: PhpBrowser
+              part: Json
+        - Db:
+            dsn: 'mysql:host=localhost;dbname=testdb'
+            user: 'root'
+            password: ''
+            populate: true # load dump before all tests
+#            cleanup: true # load dump for each test
+            dump: 'tests/_data/dump.sql'

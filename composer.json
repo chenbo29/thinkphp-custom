@@ -45,5 +45,8 @@
             "type": "composer",
             "url": "https://packagist.laravel-china.org"
         }
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.5"
     }
 }

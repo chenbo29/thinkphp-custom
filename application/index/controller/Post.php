@@ -48,7 +48,7 @@ class Post extends BaseController
         // 对业务处理结果进行控制处理-Response结果返回
         if ($postId = $this->getPostService()->insertWithComment($fields)){
 //        if ($postId = $this->getPostService()->insert($fields)){
-            return response(ResponseCode::statusSuccess, '保存成功');
+            return response(ResponseCode::statusSuccess, '保存成功', ['id' => $postId]);
         } else {
             return response(ResponseCode::statusError, '保存失败');
         }
