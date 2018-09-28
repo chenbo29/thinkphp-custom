@@ -29,7 +29,7 @@ class Post extends Migrator
 
     public function up()
     {
-        $sql = "CREATE TABLE `posts` (
+        $sql = "CREATE TABLE `post` (
  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
  `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -42,7 +42,7 @@ class Post extends Migrator
 
     public function down()
     {
-        $sql = "DROP TABLE `posts`";
+        $sql = "DROP TABLE `post`";
         $this->execute($sql);
     }
 }
