@@ -9,7 +9,10 @@
 namespace app\index\command;
 
 
+use app\index\Kernel;
 use Pimple\Container;
+use Predis\Client;
+use think\Config;
 use think\console\Command;
 
 /**
@@ -20,46 +23,17 @@ use think\console\Command;
 class BaseCommand extends Command
 {
     protected $container;
+    protected $kernel;
+    protected $redis;
 
     public function __construct($name = null)
     {
         parent::__construct($name);
         $this->container = new Container();
-    }
-
-    /**
-     * 获取service对象
-     * @param $service
-     * @return mixed
-     */
-    protected function createService($service){
-        if (!isset($this->container[$service])){
-            $serviceParams = explode(':', $service);
-            $serviceModule = $serviceParams[0];
-            preg_match("/(.*)Service$/", $serviceParams[1], $matches);
-            $serviceClass = "{$matches[1]}ImplService";
-            $stdClass = "app\\index\\service\\$serviceModule\\impl\\$serviceClass";
-            $this->container[$service] = function ($container) use($stdClass) {
-                return new $stdClass($container);
-            };
-        }
-        return $this->container[$service];
-    }
-
-    /**
-     * 获取model对象
-     * @param $model
-     * @return mixed
-     */
-    public function createModel($model){
-        if (!isset($this->container[$model])){
-            preg_match("/(.*)Model$/", $model, $matches);
-            $serviceClass = "{$matches[1]}ImplModel";
-            $stdClass = "app\\index\\model\\impl\\$serviceClass";
-            $this->container[$model] = function ($container) use($stdClass) {
-                return new $stdClass();
-            };
-        }
-        return $this->container[$model];
+        $this->container['kernel'] = function ($container){
+            return new Kernel($container);
+        };
+        $this->kernel = $this->container['kernel'];
+        $this->container['redis'] = new Client(sprintf('tcp://%s:%s', Config::get('redis.host'), Config::get('redis.port')));
     }
 }

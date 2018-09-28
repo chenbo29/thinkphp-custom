@@ -57,6 +57,6 @@ class TestCommand extends BaseCommand
      * @return mixed
      */
     private function getPostService(){
-        return $this->createService('post:PostService');
+        return $this->kernel->createService('post:PostService');
     }
 }
