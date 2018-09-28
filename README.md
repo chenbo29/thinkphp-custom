@@ -12,20 +12,20 @@
 
 * 加入服务容器化（pimple\container），解决依赖注入和单例化。（若不设计服务容器化，采用tp自身的依赖注入）。
 
-* API接口请求header头部新增Auth-Token处理非法请求。
+* API接口请求header头部新增Auth-Token处理非法请求，Auth-Token生成逻辑的定义和校验处理。
 
 * API接口版本的设计使用 git tag 打标签的方式，线上部署各个版本代码。（TODO：web服务器的配置） 
 
 * 配置tp5的config配置文件的auth->except参数，定义不需要接口安全验证的controller名称。
 
-* auth-token生成逻辑的定义和校验处理。
+* 密码的验证逻辑
 
-* 用户密码的验证逻辑
+### 构造设计的功能测试部署 
 
-### tp5的功能测试部署 
+* 自定义Command命令
+    * php think test {{post_id}}
 
-* 部署command命令（test）：php think test，更新某条数据
-
-* post实体的read、list、save、update和delete的接口
-
-* login、logout和register接口
+* 接口
+    * post实体的read、list、save、update和delete的接口
+    * comment实体的Service
+    * user实体的login、logout和register接口
