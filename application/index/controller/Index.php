@@ -58,6 +58,6 @@ class Index extends BaseController
     }
 
     private function getAuthTokenService(){
-        return $this->createService('auth:AuthTokenService');
+        return $this->kernel->createService('auth:AuthTokenService');
     }
 }

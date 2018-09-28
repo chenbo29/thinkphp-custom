@@ -175,6 +175,6 @@ class AuthTokenImplService extends BaseService implements AuthTokenService
     }
 
     private function getUserModel(){
-        return $this->createModel('UserModel');
+        return $this->kernel->createModel('UserModel');
     }
 }
