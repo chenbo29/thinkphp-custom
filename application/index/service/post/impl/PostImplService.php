@@ -10,8 +10,12 @@ namespace app\index\service\post\impl;
 
 
 
+use app\index\model\impl\PostImplModel;
 use app\index\service\BaseService;
 use app\index\service\post\PostService;
+use Pimple\Container;
+use think\Exception;
+use think\Log;
 
 /**
  * 文章类
@@ -21,69 +25,37 @@ use app\index\service\post\PostService;
 
 class PostImplService extends BaseService implements PostService
 {
-    /**
-     * 通过id获取某条记录数据
-     * @param int $id
-     * @return mixed
-     */
-    public function getById($id){
-        return $this->getPostModel()->getById($id);
-    }
-
-    /**
-     * 分页数据
-     * @param $page
-     * @param null $perPage
-     * @return mixed
-     */
-    public function listWithPaginate($page, $perPage = null)
+    public function __construct(Container $container)
     {
-        $perPage = $perPage ? $perPage : $this->getPostModel()->perPage;
-        return $this->getPostModel()->listWithPaginate($page, $perPage);
+        parent::__construct($container);
+        $this->model = new PostImplModel();
     }
 
     /**
-     * 新增数据
+     * 业务处理逻辑
+     * 新增数据并制造评论数据
      * @param array $fields
      * @return mixed
      */
-    public function insert($fields)
+    public function insertWithComment($fields)
     {
-        $this->getCommentService()->test('调试测试');
-        return $this->getPostModel()->insertWithFields($fields);
-    }
-
-    /**
-     * 通过id更新数据
-     * @param array $fields
-     * @param $id
-     * @return mixed
-     */
-    public function updateById($fields, $id)
-    {
-        return $this->getPostModel()->updateById($fields, $id);
-    }
-
-    /**
-     * 通过id删除数据
-     * @param int $id
-     * @return mixed
-     */
-    public function deleteById($id){
-        return $this->getPostModel()->deleteById($id);
-    }
-
-    /**
-     * 通过id判断是否存在
-     * @param int $id
-     * @return mixed
-     */
-    public function checkExistsById($id){
-        return $this->getPostModel()->checkExistsById($id);
-    }
-
-    public function getPostModel(){
-        return $this->kernel->createModel('PostModel');
+        // 业务逻辑1：插入用户提交的文章数据
+        $postId = $this->model->insertWithFields($fields);
+        if ($postId) {
+            // 业务逻辑2：文章增加成功则默认新增一条评论数据
+            try {
+                // 捕获异常，避免影响数据返回
+                $commentFields = [
+                    'content' => sprintf("%s{$fields['title']}%s", '这篇文章', '写的真不错')
+                ];
+                $this->getCommentService()->insert($commentFields);
+            } catch (Exception $e){
+                // 捕获后日志记录，或其它处理
+                Log::error($e->getMessage());
+            }
+        }
+        // 返回业务逻辑处理结果
+        return $postId;
     }
 
     public function getCommentService(){
