@@ -9,8 +9,10 @@
 namespace app\index\service\post\impl;
 
 
+use app\index\model\impl\CommentImplModel;
 use app\index\service\BaseService;
 use app\index\service\post\CommentService;
+use Pimple\Container;
 use think\Log;
 
 /**
@@ -20,9 +22,10 @@ use think\Log;
  */
 class CommentImplService extends BaseService implements CommentService
 {
-    public function __construct()
+    public function __construct(Container $container)
     {
-        Log::info('comment被实例化');
+        parent::__construct($container);
+        $this->model = new CommentImplModel();
     }
 
     public function test($content){

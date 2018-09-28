@@ -20,7 +20,7 @@ use app\index\model\PostModel;
  */
 class PostImplModel extends BaseModel implements PostModel
 {
-    protected $table = 'posts';
+    protected $table = 'post';
     protected $autoWriteTimestamp = true;
     public $perPage = 5;
 

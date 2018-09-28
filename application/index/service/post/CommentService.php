@@ -15,5 +15,4 @@ namespace app\index\service\post;
  */
 interface CommentService
 {
-
 }
