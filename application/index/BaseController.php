@@ -9,6 +9,7 @@
 namespace app\index;
 
 
+use app\index\service\auth\impl\AuthTokenImplService;
 use Pimple\Container;
 use Predis\Client;
 use think\Config;
@@ -23,15 +24,20 @@ use think\Request;
 class BaseController extends Controller
 {
     protected $container; //服务容器
+    protected $kernel;
 
     public function __construct(Request $request = null)
     {
         parent::__construct($request);
         $this->container = new Container();
+        $this->container['kernel'] = function ($container){
+            return new Kernel($container);
+        };
+        $this->kernel = $this->container['kernel'];
         $this->container['redis'] = new Client(sprintf('tcp://%s:%s', Config::get('redis.host'), Config::get('redis.port')));
         // 判断请求是否需要安全验证
         if (!in_array(lcfirst(Request::instance()->controller()), Config::get('auth.except'))) {
-            $authTokenService = $this->createService('auth:AuthTokenService');
+            $authTokenService = new AuthTokenImplService($this->container);
             $authToken = Request::instance()->header('Auth-Token');
             $accessKey = Request::instance()->get('ak');
             $time = Request::instance()->get('time', 0);
@@ -44,24 +50,5 @@ class BaseController extends Controller
                 $authTokenService->expireSession($accessKey, Config::get('auth.session')['ttl']);
             }
         }
-    }
-
-    /**
-     * 获取某个service对象
-     * @param $service
-     * @return mixed
-     */
-    protected function createService($service){
-        if (!isset($this->container[$service])){
-            $serviceParams = explode(':', $service);
-            $serviceModule = $serviceParams[0];
-            preg_match("/(.*)Service$/", $serviceParams[1], $matches);
-            $serviceClass = "{$matches[1]}ImplService";
-            $stdClass = __NAMESPACE__ . "\\service\\$serviceModule\\impl\\$serviceClass";
-            $this->container[$service] = function ($container) use($stdClass) {
-                return new $stdClass($container);
-            };
-        }
-        return $this->container[$service];
     }
 }

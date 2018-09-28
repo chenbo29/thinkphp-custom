@@ -19,25 +19,12 @@ class BaseService
 {
     protected $container;
     protected $redis;
+    protected $kernel;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
         $this->redis = $container['redis'];
-    }
-
-    /**
-     * 获取模型对象（载入服务容器中）
-     * @param $model
-     * @return mixed
-     */
-    public function createModel($model){
-        if (!isset($this->container[$model])){
-            preg_match("/(.*)Model$/", $model, $matches);
-            $serviceClass = "{$matches[1]}ImplModel";
-            $stdClass = "app\\index\\model\\impl\\$serviceClass";
-            $this->container[$model] = new $stdClass();
-        }
-        return $this->container[$model];
+        $this->kernel = $container['kernel'];
     }
 }

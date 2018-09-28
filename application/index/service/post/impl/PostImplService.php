@@ -49,6 +49,7 @@ class PostImplService extends BaseService implements PostService
      */
     public function insert($fields)
     {
+        $this->getCommentService()->test('调试测试');
         return $this->getPostModel()->insertWithFields($fields);
     }
 
@@ -81,15 +82,11 @@ class PostImplService extends BaseService implements PostService
         return $this->getPostModel()->checkExistsById($id);
     }
 
-    /**
-     * 获取模型
-     * @return mixed
-     */
-    public function getModel(){
-        return $this->getPostModel();
+    public function getPostModel(){
+        return $this->kernel->createModel('PostModel');
     }
 
-    public function getPostModel(){
-        return $this->createModel('PostModel');
+    public function getCommentService(){
+        return $this->kernel->createService('post:CommentService');
     }
 }
