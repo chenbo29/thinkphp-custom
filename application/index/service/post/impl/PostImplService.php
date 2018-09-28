@@ -46,7 +46,7 @@ class PostImplService extends BaseService implements PostService
             try {
                 // 捕获异常，避免影响数据返回
                 $commentFields = [
-                    'content' => sprintf("%s{$fields['title']}%s", '这篇文章', '写的真不错')
+                    'content' => sprintf("%s<<{$fields['title']}>>%s", '这篇文章', '写的真不错')
                 ];
                 $this->getCommentService()->insert($commentFields);
 
