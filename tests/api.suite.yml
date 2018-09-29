@@ -9,7 +9,7 @@ modules:
         - Db:
             dsn: 'mysql:host=localhost;dbname=testdb'
             user: 'root'
-            password: ''
+            password: 'root'
             populate: true # load dump before all tests
 #            cleanup: true # load dump for each test
             dump: 'tests/_data/dump.sql'
