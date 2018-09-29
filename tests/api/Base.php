@@ -15,6 +15,12 @@ class Base
     protected $accessKey = "testAccessKey";
     protected $secretKey = "testSecretKey";
 
+    public function __construct()
+    {
+        $databaseConfig = require dirname(__DIR__) . '/../application/database.php';
+        $this->initDumpDBStructure($databaseConfig['hostname'], $databaseConfig['username'], $databaseConfig['password'], $databaseConfig['database']);
+    }
+
     /**
      * api接口请求默认统一的参数
      * @param array $params
@@ -43,7 +49,9 @@ class Base
     protected function initUser(Db $db){
         $user = [
             'username' => $this->username,
-            'password' => password_hash($this->password, PASSWORD_BCRYPT)
+            'password' => password_hash($this->password, PASSWORD_BCRYPT),
+            'create_time' => time(),
+            'update_time' => time(),
         ];
         $db->haveInDatabase('user', $user);
         return [$this->username, $this->password];
@@ -56,5 +64,15 @@ class Base
      */
     protected function initUserSession(Redis $redis){
         $redis->haveInRedis('string',"auth:{$this->accessKey}", json_encode(['username' => $this->username, 'secretKey' => $this->secretKey]));
+    }
+
+    protected function initDumpDBStructure($host, $user, $password, $database){
+        $process = new \Symfony\Component\Process\Process(array('mysqld1ump','-h', $host, '-u', $user, "-p{$password}", '-d', $database));
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new \Symfony\Component\Process\Exception\ProcessFailedException($process);
+        }
+        file_put_contents(dirname(__DIR__) . '/_data/dump.sql', $process->getOutput());
+        return true;
     }
 }
