@@ -48,6 +48,7 @@ class Index extends BaseController
      * @return array|\think\Response
      */
     public function register(){
+//        todo 判断用户是否已经注册
         $username = Request::instance()->post('username');
         $password = Request::instance()->post('password');
         if ($this->getAuthTokenService()->register($username, $password)){
