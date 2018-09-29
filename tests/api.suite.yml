@@ -13,3 +13,8 @@ modules:
             populate: true # load dump before all tests
 #            cleanup: true # load dump for each test
             dump: 'tests/_data/dump.sql'
+        - Redis:
+            host: '127.0.0.1'
+            port: 6379
+            database: 0
+            cleanupBefore: 'never'
