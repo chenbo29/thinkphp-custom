@@ -23,13 +23,14 @@ class BaseModel extends Model
 {
     protected $table;
     protected $perPage;
-    protected $connection = 'testDb';
+    protected $connection;
     protected $db;
 
     public function __construct($data = [])
     {
         if (Config::get('app_debug') && Request::instance()->header('Auth-Token') === 'test') {
             $this->db = Db::connect('testDb');
+            $this->connection = 'testDb';
         } else {
             $this->db = Db::connect();
         }
