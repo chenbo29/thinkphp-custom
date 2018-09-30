@@ -46,8 +46,7 @@ class PostCest extends Base
         $api->sendPOST("/post?{$this->generateParamUrl()}", ['title' => $title, 'content' => $content]);
         $api->seeResponseCodeIs(\Codeception\Util\HttpCode::OK); // 200
         $api->seeResponseIsJson();
-        $response = $this->getResult($api);
-        $api->seeResponseContainsJson(['code' => \app\index\ResponseCode::statusSuccess, 'msg' => '保存成功', 'data' => ['id' => $response['data']['id']]]);
+        $api->seeResponseContainsJson(['code' => \app\index\ResponseCode::statusSuccess, 'msg' => '保存成功']);
     }
 
     public function testDelete(ApiTester $api)

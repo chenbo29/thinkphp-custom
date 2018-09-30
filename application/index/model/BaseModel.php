@@ -9,8 +9,10 @@
 namespace app\index\model;
 
 
+use think\Config;
 use think\Db;
 use think\Model;
+use think\Request;
 
 /**
  * 基础模型类
@@ -21,6 +23,18 @@ class BaseModel extends Model
 {
     protected $table;
     protected $perPage;
+    protected $connection = 'testDb';
+    protected $db;
+
+    public function __construct($data = [])
+    {
+        if (Config::get('app_debug') && Request::instance()->header('Auth-Token') === 'test') {
+            $this->db = Db::connect('testDb');
+        } else {
+            $this->db = Db::connect();
+        }
+        parent::__construct($data);
+    }
 
     /**
      * 通过id获取表数据记录
@@ -31,7 +45,7 @@ class BaseModel extends Model
      * @throws \think\exception\DbException
      */
     public function getById($id){
-        $result = Db::table($this->table)->where('id', $id)->find();
+        $result = $this->db->table($this->table)->where('id', $id)->find();
         return $result;
     }
 
@@ -45,7 +59,7 @@ class BaseModel extends Model
      * @throws \think\exception\DbException
      */
     public function listWithPaginate($page, $perPage = null){
-        $result = Db::table($this->table)->page($page, $perPage)->select();
+        $result = $this->db->table($this->table)->page($page, $perPage)->select();
         return $result;
     }
 
@@ -56,7 +70,7 @@ class BaseModel extends Model
      */
     public function insertWithFields($fields){
         $fields = array_merge($fields, ['create_time' => time(), 'update_time' => time()]);
-        return Db::table($this->table)->insertGetId($fields);
+        return $this->db->table($this->table)->insertGetId($fields);
     }
 
     /**
@@ -70,7 +84,7 @@ class BaseModel extends Model
         // fixme
         $updateAt = date('Y-m-d H:i:s', time());
         $fields = array_merge($fields, ['updated_at' => $updateAt]);
-        $table = Db::table($this->table);
+        $table = $this->db->table($this->table);
         foreach ($where as $key => $value){
             $table->where($key, $value);
         }
@@ -83,7 +97,7 @@ class BaseModel extends Model
      * @return int
      */
     public function deleteById($id){
-        return $this->where('id', '=', $id)->delete();
+        return $this->db->table($this->table)->where('id', '=', $id)->delete();
     }
 
     /**
@@ -95,6 +109,6 @@ class BaseModel extends Model
      * @throws \think\exception\DbException
      */
     public function checkExistsById($id){
-        return Db::table($this->table)->where('id', $id)->find() ? true : false;
+        return $this->db->table($this->table)->where('id', $id)->find() ? true : false;
     }
 }
