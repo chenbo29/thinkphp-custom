@@ -34,4 +34,8 @@
 
 * debug模式下接口自动化测试（建立测试环境db和redis）
 
-* 增加post文章和user用户的两个测试 vendor/bin/codecept run api
+* 增加post文章和user用户的两个测试
+
+* 执行测试
+    * 前提：由于测试
+    * vendor/bin/codecept run api
