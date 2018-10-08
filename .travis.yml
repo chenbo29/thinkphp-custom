@@ -15,7 +15,9 @@ cache:
 before_install:
   - composer self-update
   - composer install
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS test;'
   - mysql -e 'CREATE DATABASE IF NOT EXISTS testdb;'
+  - vendor/bin/phpmig migrate
   - mysqladmin -u root password "root"
 
 script:
