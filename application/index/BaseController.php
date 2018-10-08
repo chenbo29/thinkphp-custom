@@ -36,19 +36,23 @@ class BaseController extends Controller
         $this->kernel = $this->container['kernel'];
         $this->container['redis'] = new Client(sprintf('tcp://%s:%s', Config::get('redis.host'), Config::get('redis.port')));
         // 判断请求是否需要安全验证
-        if (!in_array(lcfirst(Request::instance()->controller()), Config::get('auth.except'))) {
-            $authTokenService = new AuthTokenImplService($this->container);
-            $authToken = Request::instance()->header('Auth-Token');
-            $accessKey = Request::instance()->get('ak');
-            $time = Request::instance()->get('time', 0);
-            $url = Request::instance()->url();
-            $result = $authTokenService->checkAuth($authToken, $accessKey, $time, $url);
-            if ($result !== true){
-                header('Content-Type: application/json');
-                die(json_encode(['code' => ResponseCode::statusError, 'msg' => $result]));
-            } else {
-                $authTokenService->expireSession($accessKey, Config::get('auth.session')['ttl']);
-            }
+        if (!in_array(lcfirst(Request::instance()->controller()), Config::get('auth.except')) && !in_array(lcfirst(Request::instance()->controller()).'.'.lcfirst(Request::instance()->action()), Config::get('auth.except')) ) {
+            $this->auth();
+        }
+    }
+
+    protected function auth(){
+        $authTokenService = new AuthTokenImplService($this->container);
+        $authToken = Request::instance()->header('Auth-Token');
+        $accessKey = Request::instance()->get('ak');
+        $time = Request::instance()->get('time', 0);
+        $url = Request::instance()->url();
+        $result = $authTokenService->checkAuth($authToken, $accessKey, $time, $url);
+        if ($result !== true){
+            header('Content-Type: application/json');
+            die(json_encode(['code' => ResponseCode::statusError, 'msg' => $result]));
+        } else {
+            $authTokenService->expireSession($accessKey, Config::get('auth.session')['ttl']);
         }
     }
 }

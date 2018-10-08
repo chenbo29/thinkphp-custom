@@ -242,7 +242,7 @@ return [
     // 不需要auth接口认证的控制器
     'auth' => [
         'except' => [
-            'index'
+            'index','sms.send'
         ],
         'session' => [
             'ttl' => 3600

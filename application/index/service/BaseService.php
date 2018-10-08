@@ -88,4 +88,13 @@ class BaseService
     public function checkExistsById($id){
         return $this->model->checkExistsById($id);
     }
+
+    /**
+     * 通过where判断是否存在
+     * @param int $id
+     * @return mixed
+     */
+    public function checkExistsByWhere($where){
+        return $this->model->checkExistsByWhere($where);
+    }
 }

@@ -10,6 +10,10 @@
 // +----------------------------------------------------------------------
 use think\Route;
 
+// 获取验证码
+Route::post('sms','index/Sms/send');
+
+
 // 注册
 Route::post('register','index/Index/register');
 // 登陆

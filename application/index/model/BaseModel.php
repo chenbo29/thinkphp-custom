@@ -112,4 +112,23 @@ class BaseModel extends Model
     public function checkExistsById($id){
         return $this->db->table($this->table)->where('id', $id)->find() ? true : false;
     }
+
+    /**
+     * 通过where判断记录数据是否存在
+     *  where = ['id' => 1, 'name' => 'chenbo']
+     * @array $where
+     * @return bool
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function checkExistsByWhere($where){
+        $table = $this->db->table($this->table);
+        if ($where){
+            foreach ($where as $key=>$value){
+                $table->where($key, $value);
+            }
+        }
+        return $table->find() ? true : false;
+    }
 }
