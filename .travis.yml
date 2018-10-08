@@ -2,10 +2,6 @@ sudo: false
 
 language: php
 
-branches:
-  only:
-    - stable
-
 cache:
   directories:
     - $HOME/.composer/cache
