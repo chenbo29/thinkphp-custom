@@ -16,7 +16,7 @@ before_install:
   - composer self-update
   - composer install
   - mysql -e 'CREATE DATABASE IF NOT EXISTS testdb;'
-  - mv builc/.my.cnf ~/.my.cnf
+  - mv build/.my.cnf ~/.my.cnf
 
 script:
   - vendor/bin/codecept run api
