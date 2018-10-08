@@ -15,6 +15,9 @@ cache:
 before_install:
   - composer self-update
   - composer install
+  - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('root') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+  - sudo mysql_upgrade -u root -proot
+  - sudo service mysql restart
   - mysql -e 'CREATE DATABASE IF NOT EXISTS testdb;'
   - mv build/.my.cnf ~/.my.cnf
 
