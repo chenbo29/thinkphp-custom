@@ -67,7 +67,7 @@ class Base
     }
 
     protected function initDumpDBStructure($host, $user, $password, $database){
-        $process = new \Symfony\Component\Process\Process(array('mysqldump','-h', $host, '-u', $user, "-p{$password}", '-d', $database));
+        $process = new \Symfony\Component\Process\Process(array('mysqldump','-h', $host, '-u', $user, '-d', $database));
         $process->run();
         if (!$process->isSuccessful()) {
             throw new \Symfony\Component\Process\Exception\ProcessFailedException($process);
