@@ -9,5 +9,9 @@ cache:
 before_install:
   - composer self-update
 
+before_script:
+  - sudo apt-get update
+  - sudo apt-get install mysql
+
 script:
-  - $COMPOSER_BIN_DIR/codecept run api
+  - vendor/bin/codecept run api
